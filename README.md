@@ -1,8 +1,13 @@
-# SamTimer
+# SamTimer — RiosWesley fork
 
-One-tap Android root for Samsung Galaxy devices, built around the
-**CVE-2026-98260** timer exploit (posix-cpu-timers UAF) and a
+One-tap Android root for the **Samsung Galaxy S24 Ultra (SM-S928B / e3q)**,
+built around the **CVE-2026-98260** timer exploit (posix-cpu-timers UAF) and a
 **KernelSU 3.2.5 KDP/RKP/DEFEX-patched** late-load module.
+
+- **Fork:** https://github.com/RiosWesley/SamTimer
+- **Upstream:** https://github.com/yoro1836/SamTimer
+- **XDA:** fntz1
+- **Credits:** [RiosWesley](https://github.com/RiosWesley) (GitHub) · **fntz1** (XDA)
 
 > Based on the **CVE-2026-98260-aurora** repo — its timer LPE port is what
 > `app/src/main/cpp/timer.c` evolved from.
@@ -12,7 +17,19 @@ One-tap Android root for Samsung Galaxy devices, built around the
 > probabilistic — a failed run can leave the system unstable until the next
 > reboot. Rebooting always restores the phone to a clean, unrooted state.
 
-**Credits:** [RiosWesley](https://github.com/RiosWesley) (GitHub) · **fntz1** (XDA)
+## This fork
+
+| | |
+| --- | --- |
+| Device | **SM-S928B** (Galaxy S24 Ultra, e3q, Snapdragon 8 Gen 3) |
+| Tested firmware | **S928BXXU6EZIF** (OneUI 8, kernel `6.1.162-android14-11`) |
+| Root module | **KernelSU 3.2.5** KDP-patched (`ksud-s25u-kdp`, versionCode 32525) |
+| Manager | **KernelSU 3.2.5** (`me.weishu.kernelsu`) |
+| EZJ1 | shares the same timer/workqueue/pipe/SELinux symbols; **not yet device-tested** |
+
+The official KernelSU **3.3.x LKM panics** on this Samsung kernel, so this fork
+ships the stable KDP-patched **3.2.5** module and offers the matching 3.2.5
+manager after success. A 3.3.1 manager will show “kernel needs update”.
 
 ## Overview
 
@@ -29,9 +46,15 @@ One-tap Android root for Samsung Galaxy devices, built around the
 Validated on **SM-S928B** (e3q, Snapdragon 8 Gen 3), kernel
 `6.1.162-android14-11`, OneUI 8 / EZIF, on a clean boot, twice.
 
-The KernelSU **3.3.x official LKM panics** on this Samsung kernel; this app
-therefore ships the stable KDP-patched **3.2.5** module and offers the matching
-3.2.5 manager after success. A 3.3.1 manager will show “kernel needs update”.
+### Fork changes
+
+- e3q/EZIF port of the timer UAF and KASLR slide derivation.
+- Stable pipe read/write + workqueue UMH injection (no fake-cred/KDP path).
+- Ships the KDP-patched **KernelSU 3.2.5** module; official 3.3.x panics on
+  this Samsung kernel.
+- Post-success link to the matching **KernelSU 3.2.5 manager**.
+- App icon and signed release build for sharing.
+
 
 ## Features
 
@@ -57,6 +80,10 @@ therefore ships the stable KDP-patched **3.2.5** module and offers the matching
 ```sh
 ./gradlew assembleDebug
 # APK: app/build/outputs/apk/debug/app-debug.apk
+
+./gradlew assembleRelease
+# APK: app/build/outputs/apk/release/app-release.apk
+# signed with app/keystore/release.jks (not committed)
 ```
 
 - `app/src/main/cpp/timer.c` is compiled into
