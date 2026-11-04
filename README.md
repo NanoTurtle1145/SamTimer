@@ -103,6 +103,17 @@ XDA user has also confirmed it working on **S928BXXS6EZJ1**.
    manager APK
 4. Grant `su` to your apps in the manager
 
+## Troubleshooting
+
+- **“Cannot check” or stuck on “Running…”** — Shizuku must have exactly one
+  `shizuku_server` process. If Shizuku was started twice, SamTimer and the
+  Shizuku manager can bind to different server instances; the UserService then
+  fails with `unable to find token …` and never starts. Stop Shizuku, check
+  that `ps -A | grep shizuku_server` shows one process, then start it again.
+- An old `/data/local/tmp/shizuku_starter` may fail with
+  `librish.so not found` on current Shizuku builds. Start Shizuku from the
+  manager app instead of a stale starter binary.
+
 ## Chain
 
 1. `timer.c` leaks the child cred through the kmem trace and derives the
