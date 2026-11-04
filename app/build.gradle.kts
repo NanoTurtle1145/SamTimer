@@ -79,13 +79,28 @@ android {
         applicationId = "com.roottimer.app"
         minSdk = 31
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.2"
+        versionCode = 4
+        versionName = "1.3"
     }
 
     buildTypes {
+        val releaseKs = rootProject.file("app/keystore/release.jks")
+        signingConfigs {
+            if (releaseKs.exists()) {
+                create("release") {
+                    storeFile = releaseKs
+                    storePassword = "samtimer"
+                    keyAlias = "samtimer"
+                    keyPassword = "samtimer"
+                }
+            }
+        }
         release {
             isMinifyEnabled = false
+            signingConfig = if (releaseKs.exists())
+                signingConfigs.getByName("release")
+            else
+                signingConfigs.getByName("debug")
         }
     }
 

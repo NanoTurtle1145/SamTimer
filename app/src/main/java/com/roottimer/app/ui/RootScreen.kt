@@ -119,7 +119,7 @@ fun RootScreen(
                         shape = RoundedCornerShape(50)
                     ) {
                         Text(
-                            "v1.2",
+                            "v1.3",
                             Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                             fontSize = 11.sp,
                             color = TextSecondary
