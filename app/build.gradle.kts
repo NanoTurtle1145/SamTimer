@@ -52,16 +52,22 @@ val buildPayload by tasks.registering(Exec::class) {
             ?: throw GradleException(
                 "NDK not found — set ANDROID_NDK_HOME or ndk.dir in local.properties"
             )
-        val cc = "$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android34-clang"
+        val windows = System.getProperty("os.name").startsWith("Windows")
+        val host = if (windows) "windows-x86_64" else "linux-x86_64"
+        val cc = "$ndk/toolchains/llvm/prebuilt/$host/bin/aarch64-linux-android34-clang" +
+            if (windows) ".cmd" else ""
         if (!file(cc).exists()) throw GradleException("clang not found: $cc")
         out.parentFile.mkdirs()
         logger.lifecycle("payload: $src -> $out")
-        commandLine(
-            cc,
+        val args = listOf(
             "-O2", "-std=gnu11", "-static",
             "-ffunction-sections", "-fdata-sections",
             src.absolutePath, "-o", out.absolutePath
         )
+        if (windows)
+            commandLine(listOf("cmd", "/c", cc) + args)
+        else
+            commandLine(listOf(cc) + args)
     }
 }
 
@@ -73,13 +79,28 @@ android {
         applicationId = "com.roottimer.app"
         minSdk = 31
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 4
+        versionName = "1.3"
     }
 
     buildTypes {
+        val releaseKs = rootProject.file("app/keystore/release.jks")
+        signingConfigs {
+            if (releaseKs.exists()) {
+                create("release") {
+                    storeFile = releaseKs
+                    storePassword = "samtimer"
+                    keyAlias = "samtimer"
+                    keyPassword = "samtimer"
+                }
+            }
+        }
         release {
             isMinifyEnabled = false
+            signingConfig = if (releaseKs.exists())
+                signingConfigs.getByName("release")
+            else
+                signingConfigs.getByName("debug")
         }
     }
 

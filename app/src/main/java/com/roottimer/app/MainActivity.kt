@@ -1,8 +1,10 @@
 package com.roottimer.app
 
 import android.content.ComponentName
+import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -52,6 +54,7 @@ class MainActivity : ComponentActivity() {
     private var autoRoot by mutableStateOf(false)
     private var showRunConfirm by mutableStateOf(false)
     private var showAutoConfirm by mutableStateOf(false)
+    private var showManagerDialog by mutableStateOf(false)
     private val logs = mutableStateListOf<String>()
 
     private var boundService: IRootService? = null
@@ -178,6 +181,7 @@ class MainActivity : ComponentActivity() {
                             appendLog(getString(R.string.log_auto_off))
                         }
                     },
+                    onOpenManager = { openManager() },
                 )
 
                 if (showRunConfirm) {
@@ -238,6 +242,24 @@ class MainActivity : ComponentActivity() {
                                 showAutoConfirm = false
                                 autoRoot = false
                             }) { Text(stringResource(R.string.dialog_cancel)) }
+                        },
+                    )
+                }
+                if (showManagerDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showManagerDialog = false },
+                        title = { Text(stringResource(R.string.manager_dialog_title), fontWeight = FontWeight.Bold) },
+                        text = { Text(stringResource(R.string.manager_dialog_msg)) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                showManagerDialog = false
+                                openManager()
+                            }) { Text(stringResource(R.string.manager_dialog_open), fontWeight = FontWeight.Bold) }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showManagerDialog = false }) {
+                                Text(stringResource(R.string.manager_dialog_later))
+                            }
                         },
                     )
                 }
@@ -358,6 +380,7 @@ class MainActivity : ComponentActivity() {
                     if (ksuLoaded) {
                         appendLog(getString(R.string.log_root_ok))
                         setStatus(getString(R.string.status_root_ok), Accent)
+                        showManagerDialog = true
                     } else if (exitCode == 0) {
                         appendLog(getString(R.string.log_unverified))
                         setStatus(getString(R.string.status_done_unverified), Warn)
@@ -391,6 +414,19 @@ class MainActivity : ComponentActivity() {
     private fun appendLog(line: String) {
         if (logs.size > 4000) return // hard cap
         logs.add(line)
+    }
+
+    private fun openManager() {
+        runCatching {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(getString(R.string.manager_url))
+                )
+            )
+        }.onFailure {
+            appendLog("error opening manager link: ${it.message}")
+        }
     }
 
     private fun setStatus(text: String, color: Color) {
