@@ -25,7 +25,7 @@ built around the **CVE-2026-98260** timer exploit (posix-cpu-timers UAF) and a
 | Tested firmware | **S928BXXU6EZIF** (OneUI 8, kernel `6.1.162-android14-11`) |
 | Root module | **KernelSU 3.2.5** KDP-patched (`ksud-s25u-kdp`, versionCode 32525) |
 | Manager | **KernelSU 3.2.5** (`me.weishu.kernelsu`) |
-| EZJ1 | shares the same timer/workqueue/pipe/SELinux symbols; **not yet device-tested** |
+| EZJ1 | **confirmed working by an XDA user on S928BXXS6EZJ1** (third-party report) |
 
 The official KernelSU **3.3.x LKM panics** on this Samsung kernel, so this fork
 ships the stable KDP-patched **3.2.5** module and offers the matching 3.2.5
@@ -44,7 +44,8 @@ manager after success. A 3.3.1 manager will show “kernel needs update”.
 | Root lifetime | Per-boot (ephemeral — cleared on reboot) |
 
 Validated on **SM-S928B** (e3q, Snapdragon 8 Gen 3), kernel
-`6.1.162-android14-11`, OneUI 8 / EZIF, on a clean boot, twice.
+`6.1.162-android14-11`, OneUI 8 / EZIF, on a clean boot, twice. A third-party
+XDA user has also confirmed it working on **S928BXXS6EZJ1**.
 
 ### Fork changes
 
@@ -118,7 +119,8 @@ Validated on **SM-S928B** (e3q, Snapdragon 8 Gen 3), kernel
 ## Notes for other devices / EZJ1
 
 - The e3q/EZIF and EZJ1 kernels share the timer, workqueue, pipe and SELinux
-  symbol addresses used here; EZJ1 has not yet been device-tested.
+  symbol addresses used here. EZIF was validated here twice; **EZJ1 is
+  confirmed by an XDA user on S928BXXS6EZJ1**.
 - A normal reboot removes the late-loaded module and therefore root. Re-run
   SamTimer after each boot (or enable auto-root).
 - Do not use the official 3.3.x KernelSU LKM on this Samsung kernel — it
