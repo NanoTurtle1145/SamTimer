@@ -35,6 +35,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -88,6 +89,7 @@ fun RootScreen(
     logs: List<String>,
     onRun: () -> Unit,
     onAutoToggle: (Boolean) -> Unit,
+    onOpenManager: () -> Unit,
 ) {
     Surface(color = Bg, modifier = Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxSize()) {
@@ -117,7 +119,7 @@ fun RootScreen(
                         shape = RoundedCornerShape(50)
                     ) {
                         Text(
-                            "v1.1",
+                            "v1.2",
                             Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                             fontSize = 11.sp,
                             color = TextSecondary
@@ -129,6 +131,12 @@ fun RootScreen(
                     Modifier.padding(top = 2.dp),
                     fontSize = 13.sp,
                     color = TextSecondary
+                )
+                Text(
+                    stringResource(R.string.credits),
+                    Modifier.padding(top = 2.dp),
+                    fontSize = 11.sp,
+                    color = Accent
                 )
             }
 
@@ -167,6 +175,17 @@ fun RootScreen(
                     HorizontalDivider(color = Color(0xFF232A34))
                     Spacer(Modifier.height(12.dp))
                     StatusRow("Shizuku", shizukuLabel, shizukuDot)
+                    if (rootDot == Accent) {
+                        Spacer(Modifier.height(6.dp))
+                        TextButton(onClick = onOpenManager) {
+                            Text(
+                                stringResource(R.string.manager_button),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Accent
+                            )
+                        }
+                    }
                 }
             }
 

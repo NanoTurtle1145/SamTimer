@@ -44,3 +44,5 @@ build_release.log
 
 # 规划/分析文档（按需求不纳入版本库）
 docs/
+
+app/src/main/jniLibs/arm64-v8a/libtimer.so

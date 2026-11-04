@@ -80,4 +80,11 @@
     <string name="notif_bind_fail_fmt">UserService bind failed: %1$s</string>
     <string name="notif_fail_exit_fmt">Auto-root failed (exit=%1$d)</string>
     <string name="notif_disabled_hint">Auto-root has been disabled — retry manually in the app</string>
+    <string name="credits">by RiosWesley (GitHub) · fntz1 (XDA)</string>
+    <string name="manager_button">KernelSU 3.2.5 manager</string>
+    <string name="manager_dialog_title">Root succeeded</string>
+    <string name="manager_dialog_msg">Install the KernelSU 3.2.5 manager to match the loaded module. If the 3.3.1 manager is already installed, uninstall it first — Android may refuse the 3.2.5 downgrade. The 3.3.1 manager shows “kernel needs update”.</string>
+    <string name="manager_dialog_open">Download manager</string>
+    <string name="manager_dialog_later">Later</string>
+    <string name="manager_url" translatable="false">https://github.com/tiann/KernelSU/releases/download/v3.2.5/KernelSU_v3.2.5_32525-release.apk</string>
 </resources>
